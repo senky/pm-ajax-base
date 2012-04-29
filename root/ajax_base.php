@@ -2,7 +2,7 @@
 /**
 *
 * @package phpbb_ajax_base
-* @version $Id: ajax_base.php 2010-07-21 14:24:00Z Senky $
+* @version $Id: ajax_base.php 2010-03-19 23:28:00Z Senky $
 * @copyright (c) 2010 Senky
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -19,7 +19,6 @@ $auth->acl($user->data);
 $user->setup();
 
 $mode = request_var('mode', '');
-$id = request_var('id', 0);
 
 if( $mode == 'stats' )
 {
@@ -50,8 +49,5 @@ else if( $mode == 'record' )
 {
   echo sprintf($user->lang['RECORD_ONLINE_USERS'], $config['record_online_users'], $user->format_date($config['record_online_date'], false, true));
 }
-else if( $mode == 'ctime' )
-{
-  echo sprintf($user->lang['CURRENT_TIME'], $user->format_date(time(), false, true));
-}
+
 ?>

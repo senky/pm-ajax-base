@@ -7,7 +7,10 @@
 		<meta name="generator" content="MODX file generated with PP MODX Creator by tumba25 (online version)"/>
 		<license><![CDATA[http://opensource.org/licenses/gpl-license.php GNU General Public License v2]]></license>
 		<title lang="en"><![CDATA[Ajax base]]></title>
-		<description lang="en"><![CDATA[This MOD will change statistics on the index page to ajax one. Post, topic and user count, newest member as well as current time is updated each 15 seconds (current time, of course, each second). Registered users online are updated, too.]]></description>
+		<description lang="en"><![CDATA[This MOD will change statistics on the index page to ajax one. Post, topic and user count, as well as newest member is updated each 15 seconds. Registered users online are updated, too.]]></description>
+		<author-notes lang="en"><![CDATA[This is just first, test version of MOD I plans to create. MOD will completely change phpBB into powerful ajax base with everything automatic generated and outputted by ajax.
+But firstly I have to find out what interest it would have...]]></author-notes>
+
 		<author-group>
 			<author>
 				<realname><![CDATA[Jakub Senko]]></realname>
@@ -17,118 +20,133 @@
 			</author>
 		</author-group>
 		<mod-version>1.1.0</mod-version>
+
 		<installation>
 			<level>easy</level>
-			<time>600</time>
+			<time>180</time>
 			<target-version>3.0.7-PL1</target-version>
 		</installation>
-		<history>
-			<entry>
-				<date>2010-07-22</date>
-				<rev-version>1.1.0</rev-version>
-				<changelog lang="en">
-					<change><![CDATA[jQuery implemented]]></change>
-					<change><![CDATA[Current time updated each second]]></change>
-				</changelog>
-			</entry>
-			<entry>
-				<date>2010-07-22</date>
-				<rev-version>1.0.0</rev-version>
-				<changelog lang="en">
-					<change><![CDATA[First version released]]></change>
-				</changelog>
-			</entry>
-		</history>
 	</header>
 	<action-group>
+
 		<copy>
 			<file from="root/ajax_base.php" to="ajax_base.php"/>
-			<file from="root/styles/prosilver/template/jquery-1.4.2.min.js" to="styles/prosilver/template/jquery-1.4.2.min.js"/>
 		</copy>
-		<open src="includes/functions.php">
-			<edit>
-				<find><![CDATA[		'U_FEED'				=> generate_board_url() . "/feed.$phpEx",]]></find>
-				<action type="after-add"><![CDATA[		'U_AJAX_BASE'		=> append_sid("{$phpbb_root_path}ajax_base.$phpEx"),]]></action>
-			</edit>
-		</open>
 		<open src="styles/prosilver/template/index_body.html">
 			<edit>
-				<find><![CDATA[<p class="{S_CONTENT_FLOW_END}<!-- IF S_USER_LOGGED_IN --> rightside<!-- ENDIF -->"><!-- IF S_USER_LOGGED_IN -->{LAST_VISIT_DATE}<!-- ELSE -->{CURRENT_TIME}<!-- ENDIF --></p>]]></find>
-				<inline-edit>
-					<inline-find><![CDATA[{CURRENT_TIME}]]></inline-find>
-					<inline-action type="replace-with"><![CDATA[<span id="ctime_span">{CURRENT_TIME}</span>]]></inline-action>
-				</inline-edit>
+				<find><![CDATA[	<p>{TOTAL_USERS_ONLINE} ({L_ONLINE_EXPLAIN})<br />{RECORD_USERS}<br /> <br />{LOGGED_IN_USER_LIST}]]></find>
+				<action type="replace-with"><![CDATA[	<p><span id="totals_ajax_div">{TOTAL_USERS_ONLINE}</span> ({L_ONLINE_EXPLAIN})<br /><span id="record_ajax_div">{RECORD_USERS}</span><br /> <br /><span id="logged_in_user_list">{LOGGED_IN_USER_LIST}</span>]]></action>
 			</edit>
 			<edit>
-				<find><![CDATA[<!-- IF U_MCP --><p>{CURRENT_TIME} <br />[&nbsp;<a href="{U_MCP}">{L_MCP}</a>&nbsp;]</p><!-- ELSEIF S_USER_LOGGED_IN --><p>{CURRENT_TIME}</p><!-- ENDIF -->]]></find>
-				<inline-edit>
-					<inline-find><![CDATA[{CURRENT_TIME}]]></inline-find>
-					<inline-action type="replace-with"><![CDATA[<span id="ctime_span">{CURRENT_TIME}</span>]]></inline-action>
-				</inline-edit>
-				<inline-edit>
-					<inline-find><![CDATA[{CURRENT_TIME}]]></inline-find>
-					<inline-action type="replace-with"><![CDATA[<span id="ctime_span">{CURRENT_TIME}</span>]]></inline-action>
-				</inline-edit>
-			</edit>
-			<edit>
-				<find><![CDATA[<p>{TOTAL_USERS_ONLINE} ({L_ONLINE_EXPLAIN})<br />{RECORD_USERS}<br /> <br />{LOGGED_IN_USER_LIST}]]></find>
-				<inline-edit>
-					<inline-find><![CDATA[{TOTAL_USERS_ONLINE}]]></inline-find>
-					<inline-action type="replace-with"><![CDATA[<span id="total_span">{TOTAL_USERS_ONLINE}</span>]]></inline-action>
-				</inline-edit>
-				<inline-edit>
-					<inline-find><![CDATA[{RECORD_USERS}]]></inline-find>
-					<inline-action type="replace-with"><![CDATA[<span id="record_span">{RECORD_USERS}</span>]]></inline-action>
-				</inline-edit>
-				<inline-edit>
-					<inline-find><![CDATA[{LOGGED_IN_USER_LIST}]]></inline-find>
-					<inline-action type="replace-with"><![CDATA[<span id="liul_span">{LOGGED_IN_USER_LIST}</span>]]></inline-action>
-				</inline-edit>
-			</edit>
-			<edit>
-				<find><![CDATA[	<p>{TOTAL_POSTS} &bull; {TOTAL_TOPICS} &bull; {TOTAL_USERS} &bull; {NEWEST_USER}</p>]]></find>
-				<inline-edit>
-					<inline-find><![CDATA[{TOTAL_POSTS} &bull; {TOTAL_TOPICS} &bull; {TOTAL_USERS} &bull; {NEWEST_USER}]]></inline-find>
-					<inline-action type="replace-with"><![CDATA[<span id="stats_span">{TOTAL_POSTS} &bull; {TOTAL_TOPICS} &bull; {TOTAL_USERS} &bull; {NEWEST_USER}</span>]]></inline-action>
-				</inline-edit>
-			</edit>
-			<edit>
-				<find><![CDATA[<!-- INCLUDE overall_footer.html -->]]></find>
-				<action type="before-add"><![CDATA[<script type="text/javascript">
+
+				<find><![CDATA[	<p>{TOTAL_POSTS} &bull; {TOTAL_TOPICS} &bull; {TOTAL_USERS} &bull; {NEWEST_USER}</p>
+<!-- ENDIF -->]]></find>
+				<action type="replace-with"><![CDATA[	<p><span id="statistics_ajax_div">{TOTAL_POSTS} &bull; {TOTAL_TOPICS} &bull; {TOTAL_USERS} &bull; {NEWEST_USER}</span></p>
+<!-- ENDIF -->
+
+<script type="text/javascript">
 //]]>&lt;![CDATA[<![CDATA[
-	setTimeout("reload('liul', 15000)", 15000);
-	setTimeout("reload('stats', 15000)", 15000);
-	setTimeout("reload('total', 15000)", 15000);
-	setTimeout("reload('record', 15000)", 15000);
-	setTimeout("reload('ctime', 1000)", 1000);
+var xmlhttp
+var xmlhttp2
+var xmlhttp3
+var xmlhttp4
+
+function reload_liul()
+{
+  xmlhttp=GetXmlHttpObject();
+  if (xmlhttp==null)
+  {
+    return;
+  }
+  xmlhttp.onreadystatechange=function()
+  {
+    if (xmlhttp.readyState==4)
+    {
+      document.getElementById('logged_in_user_list').innerHTML=xmlhttp.responseText;
+    }
+  }
+  xmlhttp.open('GET', 'ajax_base.php?mode=liul', true);
+  xmlhttp.send(null);
+
+  setTimeout('reload_liul()', 15000);
+}
+
+function reload_stats()
+{
+  xmlhttp2=GetXmlHttpObject();
+  if (xmlhttp2==null)
+  {
+    return;
+  }
+  xmlhttp2.onreadystatechange=function()
+  {
+    if (xmlhttp2.readyState==4)
+    {
+      document.getElementById('statistics_ajax_div').innerHTML=xmlhttp2.responseText;
+    }
+  }
+  xmlhttp2.open('GET', 'ajax_base.php?mode=stats', true);
+  xmlhttp2.send(null);
+  setTimeout('reload_stats()', 15000);
+}
+
+function reload_totals()
+{
+  xmlhttp3=GetXmlHttpObject();
+  if (xmlhttp3==null)
+  {
+    return;
+  }
+  xmlhttp3.onreadystatechange=function()
+  {
+    if (xmlhttp3.readyState==4)
+    {
+      document.getElementById('totals_ajax_div').innerHTML=xmlhttp3.responseText;
+    }
+  }
+  xmlhttp3.open('GET', 'ajax_base.php?mode=total', true);
+  xmlhttp3.send(null);
+  setTimeout('reload_totals()', 15000);
+}
+
+function reload_record()
+{
+  xmlhttp4=GetXmlHttpObject();
+  if (xmlhttp4==null)
+  {
+    return;
+  }
+  xmlhttp4.onreadystatechange=function()
+  {
+    if (xmlhttp4.readyState==4)
+    {
+      document.getElementById('record_ajax_div').innerHTML=xmlhttp4.responseText;
+    }
+  }
+  xmlhttp4.open('GET', 'ajax_base.php?mode=record', true);
+  xmlhttp4.send(null);
+  setTimeout('reload_record()', 15000);
+}
+
+function GetXmlHttpObject()
+{
+  if (window.XMLHttpRequest)
+  {
+    return new XMLHttpRequest();
+  }
+  if (window.ActiveXObject)
+  {
+    return new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  return null;
+}
+
+setTimeout('reload_liul()', 15000);
+setTimeout('reload_stats()', 15000);
+setTimeout('reload_totals()', 15000);
+setTimeout('reload_record', 15000);
 //]]>]]&gt;<![CDATA[
 </script>]]></action>
-			</edit>
-		</open>
-		<open src="styles/prosilver/template/overall_header.html">
-			<edit>
-				<find><![CDATA[			eval(onunload_functions[i]);
-		}
-	}]]></find>
-				<action type="after-add"><![CDATA[	/**
-	* Ajax base MOD (by Senky) basic function
-	*/
-	function reload(what, refresh_time)
-	{
-  	$.ajax({
-			type: 'POST',
-			url: '{U_AJAX_BASE}',
-			data: 'mode=' + what,
-			success: function(data){
-				$('#' + what + '_span').html(data);
-				setTimeout("reload('" + what + "', " + refresh_time + ")", refresh_time);
-			}
- 		});
-	}]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/forum_fn.js"></script>]]></find>
-				<action type="after-add"><![CDATA[<script type="text/javascript" src="{T_TEMPLATE_PATH}/jquery-1.4.2.min.js"></script>]]></action>
 			</edit>
 		</open>
 		<diy-instructions lang="en"><![CDATA[Purge the cache and refresh the template.]]></diy-instructions>
