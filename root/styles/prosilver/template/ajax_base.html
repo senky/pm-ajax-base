@@ -1,0 +1,20 @@
+<!-- IF SCRIPT_NAME eq 'index' or SCRIPT_NAME eq 'posting' -->
+
+<script type="text/javascript">
+// <![CDATA[
+
+var ajax_base_url = '{U_AJAX_BASE}',
+	ajax_base_script = '{SCRIPT_NAME}';
+
+(function() {
+	var s = document.createElement('script');
+	s.type = 'text/javascript';
+	s.async = true;
+	s.src = '{T_SUPER_TEMPLATE_PATH}/ajax_base.js';
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(s);
+})();
+
+// ]]>
+</script>
+
+<!-- ENDIF -->

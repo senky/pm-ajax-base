@@ -48,39 +48,63 @@
 			</entry>
 		</history>
 		<link-group>
-			<link type="contrib" href="contrib/update_1.1.0_to_2.0.0.xml" lang="en">Update from 1.1.0</link>
+			<link type="parent" href="../install_mod.xml" lang="en">Main installation file</link>
 		</link-group>
 	</header>
 	<action-group>
 		<copy>
 			<file from="root/*.*" to="*.*"/>
 		</copy>
-		<open src="includes/functions.php">
-			<edit>
-				<find><![CDATA[		'U_FEED'				=> generate_board_url() . "/feed.$phpEx",]]></find>
-				<action type="after-add"><![CDATA[		'U_AJAX_BASE'		=> append_sid("{$phpbb_root_path}ajax_base.$phpEx"),]]></action>
-			</edit>
-		</open>
+		<delete>
+			<file name="styles/prosilver/template/jquery-1.4.2.min.js"/>
+		</delete>
 		<open src="styles/prosilver/template/index_body.html">
 			<edit>
-				<find><![CDATA[	<p>{TOTAL_USERS_ONLINE} ({L_ONLINE_EXPLAIN})<br />{RECORD_USERS}<br /> <br />{LOGGED_IN_USER_LIST}]]></find>
+				<find><![CDATA[<p class="{S_CONTENT_FLOW_END}<!-- IF S_USER_LOGGED_IN --> rightside<!-- ENDIF -->"><!-- IF S_USER_LOGGED_IN -->{LAST_VISIT_DATE}<!-- ELSE --><span id="ctime_span">{CURRENT_TIME}</span><!-- ENDIF --></p>]]></find>
 				<inline-edit>
-					<inline-find><![CDATA[{TOTAL_USERS_ONLINE}]]></inline-find>
-					<inline-action type="before-add"><![CDATA[<span id="who_is_online_wrapper">]]></inline-action>
-				</inline-edit>
-				<inline-edit>
-					<inline-find><![CDATA[{LOGGED_IN_USER_LIST}]]></inline-find>
-					<inline-action type="after-add"><![CDATA[</span>]]></inline-action>
+					<inline-find><![CDATA[<span id="ctime_span">{CURRENT_TIME}</span>]]></inline-find>
+					<inline-action type="replace-with"><![CDATA[{CURRENT_TIME}]]></inline-action>
 				</inline-edit>
 			</edit>
 			<edit>
-				<find><![CDATA[	<p>{TOTAL_POSTS} &bull; {TOTAL_TOPICS} &bull; {TOTAL_USERS} &bull; {NEWEST_USER}</p>]]></find>
-				<action type="before-add"><![CDATA[	<div id="statistics_wrapper">]]></action>
-				<action type="after-add"><![CDATA[	</div>]]></action>
+				<find><![CDATA[	<p><span id="total_span">{TOTAL_USERS_ONLINE}</span> ({L_ONLINE_EXPLAIN})<br /><span id="record_span">{RECORD_USERS}</span><br /> <br /><span id="liul_span">{LOGGED_IN_USER_LIST}</span>]]></find>
+				<inline-edit>
+					<inline-action type="replace-with"><![CDATA[	<p><span id="who_is_online_wrapper">{TOTAL_USERS_ONLINE} ({L_ONLINE_EXPLAIN})<br />{RECORD_USERS}<br /> <br />{LOGGED_IN_USER_LIST}</span></span>]]></inline-action>
+				</inline-edit>
+			</edit>
+			<edit>
+				<find><![CDATA[	<p><span id="stats_span">{TOTAL_POSTS} &bull; {TOTAL_TOPICS} &bull; {TOTAL_USERS} &bull; {NEWEST_USER}</span></p>]]></find>
+				<action type="replace-with"><![CDATA[	<div id="statistics_wrapper">
+	<p>{TOTAL_POSTS} &bull; {TOTAL_TOPICS} &bull; {TOTAL_USERS} &bull; {NEWEST_USER}</p>
+	</div>]]></action>
+				<remove><![CDATA[<script type="text/javascript">
+//]]>&lt;![CDATA[<![CDATA[
+	setTimeout("reload('liul', 15000)", 15000);
+	setTimeout("reload('stats', 15000)", 15000);
+	setTimeout("reload('total', 15000)", 15000);
+	setTimeout("reload('record', 15000)", 15000);
+	setTimeout("reload('ctime', 1000)", 1000);
+//]]>]]&gt;<![CDATA[
+</script>]]></remove>
 			</edit>
 		</open>
 		<open src="styles/prosilver/template/overall_header.html">
 			<edit>
+				<remove><![CDATA[	/**
+	* Ajax base MOD (by Senky) basic function
+	*/
+	function reload(what, refresh_time)
+	{
+  	$.ajax({
+			type: 'POST',
+			url: '{U_AJAX_BASE}',
+			data: 'mode=' + what,
+			success: function(data){
+				$('#' + what + '_span').html(data);
+				setTimeout("reload('" + what + "', " + refresh_time + ")", refresh_time);
+			}
+ 		});
+	}]]></remove>
 				<find><![CDATA[</head>]]></find>
 				<action type="before-add"><![CDATA[<!-- INCLUDE ajax_base.html -->]]></action>
 			</edit>
